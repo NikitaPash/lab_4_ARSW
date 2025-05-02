@@ -21,7 +21,6 @@ def format_bulk_order(order):
 def main():
     print("===== Restaurant Order Management System =====\n")
 
-    # Create and display menu
     print("Setting up menu...")
     menu = Menu()
     menu.add_dish(Dish("Pizza", 150))
@@ -34,54 +33,44 @@ def main():
         print(f"- {dish.name}: ${dish.price}")
     print()
 
-    # Check if menu contains specific dishes
     pizza = Dish("Pizza", 150)
     if menu.contains_dish(pizza):
         print(f"Menu contains {pizza.name}\n")
 
-    # Create a standard order
     print("Creating a standard order...")
-    alice = Customer("Alice")
-    standard_order = OrderFactory.create_order("standard", alice)
+    customer1 = Customer("Potuzhnych")
+    standard_order = OrderFactory.create_order("standard", customer1)
 
-    # Set up notification
     kitchen = KitchenObserver()
     standard_order.attach(kitchen)
 
-    # Add dishes to standard order
-    print("Adding dishes to Alice's order...")
+    print("Adding dishes to Potuzhnych's order...")
     standard_order.add_dish(Dish("Pizza", 150))
     standard_order.add_dish(Dish("Sushi", 200))
 
-    # Calculate and display total
     total = standard_order.calculate_total()
-    print(f"Total for Alice's order: ${total}\n")
+    print(f"Total for Potuzhnych's order: ${total}\n")
 
-    # Create a bulk order with discount
     print("Creating a bulk order with discount...")
-    bob = Customer("Bob")
-    bulk_order = OrderFactory.create_order("bulk", bob)
+    customer2 = Customer("Peremozhnych")
+    bulk_order = OrderFactory.create_order("bulk", customer2)
     bulk_order.attach(kitchen)
 
-    # Add dishes to bulk order
-    print("Adding dishes to Bob's bulk order...")
+    print("Adding dishes to Peremozhnych's bulk order...")
     bulk_order.add_dish(Dish("Burger", 120))
     bulk_order.add_dish(Dish("Salad", 80))
     bulk_order.add_dish(Dish("Pizza", 150))
 
-    # Calculate and display total with discount
     bulk_total = bulk_order.calculate_total()
     original_total = sum(dish.price for dish in bulk_order.dishes)
-    print(f"Original total for Bob's order: ${original_total}")
+    print(f"Original total for Peremozhnych's order: ${original_total}")
     print(f"Discounted total ({bulk_order.discount_percentage}% off): ${bulk_total}\n")
 
-    # Store orders in database
     print("Storing orders in database...")
     db = Database.get_instance()
     db.add_order(standard_order)
     db.add_order(bulk_order)
 
-    # Display all orders in database
     print("\nCurrent orders in DB:")
     for i, order in enumerate(db.list_orders(), 1):
         if hasattr(order, 'discount_percentage'):
